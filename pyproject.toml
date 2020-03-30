@@ -27,6 +27,7 @@ fastai = { version="1.0.57", optional=true }
 [tool.poetry.dev-dependencies]
 pytest = "^5.4.1"
 flake8 = "^3.7.9"
+black = {version = "^19.10b0", allow-prereleases = true}
 
 [tool.poetry.extras]
 sklearn = ["scikit-learn"]

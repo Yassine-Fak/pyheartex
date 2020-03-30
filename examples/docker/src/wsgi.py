@@ -6,6 +6,7 @@ logging.basicConfig(level=logging.INFO)
 
 from htx import app, init_model_server
 from image_classifier import FastaiImageClassifier, train_script
+from settings import REDIS_HOST, REDIS_PORT, RQ_QUEUE_NAME
 
 
 init_model_server(
@@ -13,9 +14,9 @@ init_model_server(
     train_script=train_script,
     num_iter=10,
     image_dir='~/.heartex/images',
-    redis_queue=os.environ.get('RQ_QUEUE_NAME', 'default'),
-    redis_host=os.environ.get('REDIS_HOST', 'localhost'),
-    redis_port=os.environ.get('REDIS_PORT', 6379),
+    redis_queue=RQ_QUEUE_NAME,
+    redis_host=REDIS_HOST,
+    redis_port=REDIS_PORT,
 )
 
 

@@ -1,27 +1,29 @@
-version: "3.5"
+version: "3.7"
+
+volumes:
+  redis-data:
+  models-data:
 
 services:
   redis:
-    container_name: redis
     image: redis:alpine
-    hostname: redis
     volumes:
-      - "./storage/redis:/data"
-    expose:
-      - 6379
-  model_server:
-    container_name: model_server
+      - "redis-data:/data"
+
+  worker:
+    image: gcharbon/pyheartex-example-worker
     environment:
-      - RQ_QUEUE_NAME=model_server
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    build:
-      context: scripts
+      RQ_QUEUE_NAME: model_server
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+  server:
+    image: gcharbon/pyheartex-example-server
+    environment:
+      RQ_QUEUE_NAME: model_server
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    volumes:
+      - "models-data:/root/.heartex"
     ports:
       - 9090:9090
-    depends_on:
-      - redis
-    links:
-      - redis
-    volumes:
-      - "./storage/data:/root/.heartex"
