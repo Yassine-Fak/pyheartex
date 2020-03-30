@@ -1,0 +1,11 @@
+FROM python:3.7
+
+COPY requirements.txt /tmp
+
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+WORKDIR /app
+
+COPY src/settings.py .
+
+CMD ["rq", "worker", "-c", "settings"]
