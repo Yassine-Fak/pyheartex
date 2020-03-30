@@ -101,7 +101,8 @@ Here is an example how to start serving image classifier:
 
 ```bash
 cd examples/docker
-docker-compose up
+./scripts/build.sh
+./scripts/deploy.sh
 ```
 
 All you need to replace with your own model is to change loading, inference and training scripts from [this file](examples/docker/scripts/image_classifier.py).

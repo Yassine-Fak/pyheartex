@@ -27,3 +27,16 @@ services:
       - "models-data:/root/.heartex"
     ports:
       - 9090:9090
+
+  labelstudio:
+    image: heartexlabs/label-studio
+    ports:
+      # <HOST_PORT:CONTAINER_PORT>
+      - 8280:8200
+    command:
+      - label-studio
+      - init
+      - labeling_project
+
+
+
