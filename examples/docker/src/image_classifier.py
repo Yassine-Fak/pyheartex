@@ -5,7 +5,7 @@ import os
 
 from PIL import Image
 from pathlib import Path
-from fastai.vision import ImageDataBunch, get_transforms, models, cnn_learner, accuracy, load_learner, open_image
+# from fastai.vision import ImageDataBunch, get_transforms, models, cnn_learner, accuracy, load_learner, open_image
 from htx.base_model import SingleClassImageClassifier
 from htx.utils import download
 
