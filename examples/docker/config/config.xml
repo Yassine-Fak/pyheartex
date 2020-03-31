@@ -1,0 +1,10 @@
+<View>
+  <Image name="img" value="$image_url"/>
+  <Choices name="choice" toName="img" showInLine="true">
+    <Choice value="Back"/>
+    <Choice value="Discard"/>
+    <Choice value="Front"/>
+    <Choice value="Left"/>
+    <Choice value="Right"/>
+  </Choices>
+</View>

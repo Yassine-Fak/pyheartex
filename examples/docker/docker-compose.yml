@@ -4,6 +4,18 @@ volumes:
   redis-data:
   models-data:
   images-data:
+  labelstudio_volume:
+  labelstudio_completions_volume:
+
+
+configs:
+  label_studio_config:
+    file: config/config.json
+  label_studio_tasks:
+    file: config/tasks.json
+  label_studio_labelling:
+    file: config/config.xml
+
 
 services:
   redis:
@@ -42,15 +54,27 @@ services:
     command:
       - label-studio
       - start
-      - --init
-      - --template
-      - image_classification
-      - --ml-backend-url
-      - http://server:9090
-      - --ml-backend-name
-      - fastai_classifier
       - labeling_project
+      # - --init
+      # - --template
+      # - image_classification
+      # - --ml-backend-url
+      # - http://server:9090
+      # - --ml-backend-name
+      # - fastai_classifier
+      # - labeling_project
 
     ports:
       # <HOST_PORT:CONTAINER_PORT>
       - 8280:8080
+    volumes:
+      - labelstudio_volume:/label-studio/labeling_project
+      - labelstudio_completions_volume:/label-studio/labeling_project/completions
+    configs:
+      - source: label_studio_config
+        target: /label-studio/labeling_project/config.json
+      - source: label_studio_tasks
+        target: /label-studio/labeling_project/tasks.json
+      - source: label_studio_labelling
+        target: /label-studio/labeling_project/config.xml
+
