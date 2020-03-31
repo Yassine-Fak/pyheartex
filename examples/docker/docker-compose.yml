@@ -16,6 +16,9 @@ services:
       RQ_QUEUE_NAME: model_server
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      MODEL_DIR: /data/models
+    volumes:
+      - "models-data:/data/models"
 
   server:
     image: gcharbon/pyheartex-example-server
@@ -23,20 +26,26 @@ services:
       RQ_QUEUE_NAME: model_server
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      MODEL_DIR: /data/models
     volumes:
-      - "models-data:/root/.heartex"
+      - "models-data:/data/models"
     ports:
       - 9090:9090
 
   labelstudio:
     image: heartexlabs/label-studio
-    ports:
-      # <HOST_PORT:CONTAINER_PORT>
-      - 8280:8200
     command:
       - label-studio
-      - init
+      - start
+      - --init
+      - --template
+      - image_classification
+      - --ml-backend-url
+      - http://server:9090
+      - --ml-backend-name
+      - fastai_classifier
       - labeling_project
 
-
-
+    ports:
+      # <HOST_PORT:CONTAINER_PORT>
+      - 8280:8080

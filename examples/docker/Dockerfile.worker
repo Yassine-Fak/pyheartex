@@ -6,6 +6,6 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 WORKDIR /app
 
-COPY src/settings.py .
+COPY src/* ./
 
 CMD ["rq", "worker", "-c", "settings"]
