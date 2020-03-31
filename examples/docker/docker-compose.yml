@@ -3,6 +3,7 @@ version: "3.7"
 volumes:
   redis-data:
   models-data:
+  images-data:
 
 services:
   redis:
@@ -17,8 +18,10 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       MODEL_DIR: /data/models
+      IMAGE_DIR: /data/images
     volumes:
       - "models-data:/data/models"
+      - "images-data:/data/images"
 
   server:
     image: gcharbon/pyheartex-example-server
@@ -27,8 +30,10 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       MODEL_DIR: /data/models
+      IMAGE_DIR: /data/images
     volumes:
       - "models-data:/data/models"
+      - "images-data:/data/images"
     ports:
       - 9090:9090
 
