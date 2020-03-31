@@ -27,6 +27,8 @@ def generate_version():
 
 
 def download(url, output_dir, filename=None):
+    # This function allows us to download a picture from a given url
+    # It returns the file path of the downloaded image
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     if filename is None:
