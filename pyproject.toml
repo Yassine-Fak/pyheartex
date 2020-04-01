@@ -23,6 +23,8 @@ numpy = "1.16.3"
 requests = "^2.23.0"
 scikit-learn = { version="^0.22.2", optional=true }
 fastai = { version="1.0.57", optional=true }
+# TODO make the use of keras optionnal 
+keras = "^2.3.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.4.1"

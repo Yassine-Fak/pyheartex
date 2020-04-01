@@ -5,7 +5,6 @@ volumes:
   models-data:
   images-data:
   labelstudio_volume:
-  labelstudio_completions_volume:
 
 
 configs:
@@ -69,7 +68,6 @@ services:
       - 8280:8080
     volumes:
       - labelstudio_volume:/label-studio/labeling_project
-      - labelstudio_completions_volume:/label-studio/labeling_project/completions
     configs:
       - source: label_studio_config
         target: /label-studio/labeling_project/config.json

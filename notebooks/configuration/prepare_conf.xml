@@ -1,0 +1,5 @@
+<View>
+  <Image name="img" value="$image"></Image>
+  <Choices name="tag" toName="img" choice="single-radio">
+  </Choices>
+</View>
