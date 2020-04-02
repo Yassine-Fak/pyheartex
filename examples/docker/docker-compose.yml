@@ -30,6 +30,7 @@ services:
       REDIS_PORT: 6379
       MODEL_DIR: /data/models
       IMAGE_DIR: /data/images
+      LOG_LEVEL: DEBUG
     volumes:
       - "models-data:/data/models"
       - "images-data:/data/images"
@@ -42,6 +43,7 @@ services:
       REDIS_PORT: 6379
       MODEL_DIR: /data/models
       IMAGE_DIR: /data/images
+      LOG_LEVEL: DEBUG
     volumes:
       - "models-data:/data/models"
       - "images-data:/data/images"

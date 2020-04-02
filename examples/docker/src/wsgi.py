@@ -2,7 +2,8 @@ import os
 import logging
 import argparse
 
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 from htx import app, init_model_server
 from image_classifier import FastaiImageClassifier, train_script
