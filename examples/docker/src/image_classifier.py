@@ -147,7 +147,6 @@ def train_script(input_data, output_dir, image_dir, batch_size=4, num_iter=10, *
     number_of_folders = 0
     for _, dirnames, x in os.walk(image_dir):
         number_of_folders += len(dirnames)
-    number_of_folders = 0
     if number_of_folders != num_class:
         logger.error("The number of sub directories is differents from the number of classes")
         raise FileNotFoundError ("The number of sub directories is differents from the number of classes" )
