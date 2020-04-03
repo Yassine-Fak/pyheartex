@@ -4,7 +4,7 @@ import logging
 import os
 from PIL import Image
 from htx.base_model import SingleClassImageClassifier
-from htx.utils import download
+# from htx.utils import download
 import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img
@@ -18,6 +18,9 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from settings import LOG_LEVEL
 import logging
 from logging.handlers import RotatingFileHandler
+from useful_functions import download_image_from_url
+from useful_functions import model
+from useful_functions import num_class
 
 
 logger = logging.getLogger(__name__)
@@ -56,16 +59,17 @@ class FastaiImageClassifier(SingleClassImageClassifier):
         # self._model = load_learner(serialized_train_output['model_path'])
         # path = os.path.join(serialized_train_output['model_path'], "trained_model.h5")
         logger.debug(f"Loading model from {serialized_train_output['model_path']}")
-        self._model = load_model(serialized_train_output['model_path'], compile=False)
+        self._model = load_model(serialized_train_output['model_path'])
+        logger.debug("Model successfully loaded")
         logger.debug(f"Loading images from {serialized_train_output['image_dir']}")
         self._image_dir = serialized_train_output['image_dir']
 
     @classmethod
     def _get_image_from_url(self, url):
-        logger.debug(f"Trying to download image from url '{url}'")
+        logger.debug(f"Trying to get image from url '{url}'")
         r = requests.get(url, stream=True)
         r.raise_for_status()
-        logger.debug(f"Successfully downloaded image from url '{url}'")
+        logger.debug(f"Successfully get image from url '{url}'")
         with io.BytesIO(r.content) as f:
             return Image.open(f).convert('RGB')
     
@@ -74,20 +78,26 @@ class FastaiImageClassifier(SingleClassImageClassifier):
         list_of_labels = ["Back", "Discard", "Front", "Left", "Right"]
         for task in tasks:
             logger.debug(f"Trying to download the image given in the task '{task}'")
-            image_file = download(task['input'][0], "/tmp")
+            image_file = download_image_from_url(task['input'][0], "/tmp")
             logger.debug(f"Successfully downloaded image from the given task '{task}'")
+            logger.debug(f"The image file is : {image_file} ")
             image = load_img(image_file, target_size=(224, 224))
+            logger.debug(f"Successfully loaded the image, its content is : {image}")
             image = img_to_array(image)
             image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
             logger.debug(f"making prediction for the image given in the task '{task}'")
             # cette ligne a verifier le self?
-            probs = self._model.predict(image)[0]
+            # probs = self._model.predict(image)[0]
+            x = int(self._model.predict_classes(image)[0])
             logger.debug(f"successfully predicting the label of the image given in the task '{task}'")
-            label_idx = np.argmax(probs)
-            label = list_of_labels[label_idx]
-            score = probs[label_idx]
+            # label_idx = np.argmax(probs)
+            # label = list_of_labels[label_idx]
+            # score = probs[label_idx]
+            label = list_of_labels[x]
+            score = 0.99
             pred_labels.append(label)
-            pred_scores.append(score.item())
+            pred_scores.append(score)
+            # pred_scores.append(score.item())
         return self.make_results(tasks, pred_labels, pred_scores)
         
 
@@ -101,22 +111,6 @@ class FastaiImageClassifier(SingleClassImageClassifier):
     #         pred_labels.append(label)
     #         pred_scores.append(score.item())
     #     return self.make_results(tasks, pred_labels, pred_scores)
-
-
-num_class = 5
-def creat_compiled_model():
-    model = Sequential()
-    model.add(NASNetMobile(input_shape=(224, 224, 3), include_top=False,
-                           weights='imagenet', pooling='avg'))
-    model.add(Dense(num_class, activation='softmax'))
-    model.layers[0].trainable = True
-    model.layers[1].trainable = True
-    sgd = SGD(learning_rate=0.01, momentum=0.01, nesterov=False)
-    model.compile(optimizer=sgd, loss='hinge', metrics=['accuracy'])
-    return model
-
-
-model = creat_compiled_model()
 
 
 def train_script(input_data, output_dir, image_dir, batch_size=4, num_iter=10, **kwargs):
@@ -137,7 +131,7 @@ def train_script(input_data, output_dir, image_dir, batch_size=4, num_iter=10, *
         label = item['output'][0]
         label = str(label)
         logger.debug("Downloading the image to train the model ")
-        image_path = download(image_url, os.path.join(image_dir, label))
+        image_path = download_image_from_url(image_url, os.path.join(image_dir, label))
         # Les deux prochains lignes peuvent être supprime
         logger.debug("Successfully downloaded the image to train the model ")
         filenames.append(image_path)
@@ -167,7 +161,9 @@ def train_script(input_data, output_dir, image_dir, batch_size=4, num_iter=10, *
     logger.debug("Successfully fitting the model  ")
     path = os.path.join(output_dir, "trained_model")
     logger.debug("Saving the model  ")
-    model.save(path, overwrite=True, include_optimizer=False, save_format='h5')
+    sgd = SGD(learning_rate=0.01, momentum=0.01, nesterov=False)
+    model.compile(optimizer=sgd, loss='hinge', metrics=['accuracy'])
+    model.save(path, save_format='h5')
     logger.debug(f"Model saved in  '{path}'")
     return {'model_path': path, 'image_dir': image_dir}
     # return {'model_path': output_dir, 'image_dir': image_dir}
