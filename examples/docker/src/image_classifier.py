@@ -79,7 +79,7 @@ class FastaiImageClassifier(SingleClassImageClassifier):
             image = load_img(image_file, target_size=(224, 224))
             image = img_to_array(image)
             image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
-            logger.debug(f"makink prediction for the image given in the task '{task}'")
+            logger.debug(f"making prediction for the image given in the task '{task}'")
             # cette ligne a verifier le self?
             probs = self._model.predict(image)[0]
             logger.debug(f"successfully predicting the label of the image given in the task '{task}'")
@@ -145,8 +145,12 @@ def train_script(input_data, output_dir, image_dir, batch_size=4, num_iter=10, *
     logger.debug(f"The labels are: {labels}")
     # here we raise an error if len(labls) != num_of_classes => Raise an Error: Not enough images to rain the model
     number_of_folders = 0
-    for _, dirnames, x in os.walk(image_dir):
+    number_of_files = 0
+    for _, dirnames, filnames in os.walk(image_dir):
         number_of_folders += len(dirnames)
+        number_of_files += len(filnames)
+    logger.debug(f"The number of images found is :  {number_of_files}")
+    logger.debug(f"The image directory is: {image_dir}")
     if number_of_folders != num_class:
         logger.error("The number of sub directories is differents from the number of classes")
         raise FileNotFoundError ("The number of sub directories is differents from the number of classes" )
@@ -155,11 +159,11 @@ def train_script(input_data, output_dir, image_dir, batch_size=4, num_iter=10, *
     # a ce stade le dossier image_dir contient 5 sous dossier qui corespond aux labels
     logger.debug("creating the image data generator object ")
     train_datagen = ImageDataGenerator(rescale=1./255, preprocessing_function=preprocess_input)
-    logger.debug(f"The image directory is: {image_dir}")
     logger.debug(f"content of directory {os.listdir(image_dir)}")
-    train_generator = train_datagen.flow_from_directory(image_dir, batch_size=batch_size)
+    # train_generator = train_datagen.flow_from_directory(image_dir, batch_size=batch_size)
+    train_generator = train_datagen.flow_from_directory("/data/images", batch_size=batch_size)
     logger.debug("Fitting the model using the generator  ")
-    model.fit(x=train_generator, epochs=num_iter, steps_per_epoch=3)
+    model.fit(train_generator, epochs=num_iter, steps_per_epoch=3)
     logger.debug("Successfully fitting the model  ")
     path = os.path.join(output_dir, "trained_model")
     logger.debug("Saving the model  ")

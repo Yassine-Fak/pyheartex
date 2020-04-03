@@ -5,6 +5,7 @@ import json
 import os
 import hashlib
 import requests
+from PIL import Image
 
 from glob import glob
 from datetime import datetime
@@ -26,6 +27,23 @@ def generate_version():
     return str(int(datetime.now().timestamp()))
 
 
+# def download(url, output_dir, filename=None):
+#     # This function allows us to download a picture from a given url
+#     # It returns the file path of the downloaded image
+#     if not os.path.exists(output_dir):
+#         os.makedirs(output_dir)
+#     if filename is None:
+#         filename = hashlib.md5(url.encode()).hexdigest()
+#     filepath = os.path.join(output_dir, filename)
+#     if os.path.exists(filepath):
+#         return filepath
+#     r = requests.get(url)
+#     r.raise_for_status()
+#     with io.open(filepath, mode='wb') as fout:
+#         fout.write(r.content)
+#     return filepath
+
+
 def download(url, output_dir, filename=None):
     # This function allows us to download a picture from a given url
     # It returns the file path of the downloaded image
@@ -35,9 +53,17 @@ def download(url, output_dir, filename=None):
         filename = hashlib.md5(url.encode()).hexdigest()
     filepath = os.path.join(output_dir, filename)
     if os.path.exists(filepath):
+        im = Image.open(filepath)
+        os.remove(filepath)
+        filepath = os.path.join(output_dir, filename + ".jpg")
+        im.save(filepath)
         return filepath
     r = requests.get(url)
     r.raise_for_status()
     with io.open(filepath, mode='wb') as fout:
         fout.write(r.content)
+    im = Image.open(filepath)
+    os.remove(filepath)
+    filepath = os.path.join(output_dir, filename + ".jpg")
+    im.save(filepath)
     return filepath
