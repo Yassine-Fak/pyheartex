@@ -87,17 +87,13 @@ class FastaiImageClassifier(SingleClassImageClassifier):
             image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
             logger.debug(f"making prediction for the image given in the task '{task}'")
             # cette ligne a verifier le self?
-            # probs = self._model.predict(image)[0]
-            x = int(self._model.predict_classes(image)[0])
+            probs = self._model.predict(image)[0]
             logger.debug(f"successfully predicting the label of the image given in the task '{task}'")
-            # label_idx = np.argmax(probs)
-            # label = list_of_labels[label_idx]
-            # score = probs[label_idx]
-            label = list_of_labels[x]
-            score = 0.99
+            label_idx = np.argmax(probs)
+            label = list_of_labels[label_idx]
+            score = probs[label_idx]
             pred_labels.append(label)
             pred_scores.append(score)
-            # pred_scores.append(score.item())
         return self.make_results(tasks, pred_labels, pred_scores)
         
 

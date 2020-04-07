@@ -31,8 +31,8 @@ services:
       MODEL_DIR: /data/models
       IMAGE_DIR: /data/images
       LOG_LEVEL: DEBUG
-      CUDA_VISIBLE_DEVICES: -1
-      TF_CPP_MIN_LOG_LEVEL: 2
+      CUDA_VISIBLE_DEVICES: -1 
+      # TF_CPP_MIN_LOG_LEVEL: 2
     volumes:
       - "models-data:/data/models"
       - "images-data:/data/images"
@@ -47,7 +47,7 @@ services:
       IMAGE_DIR: /data/images
       LOG_LEVEL: DEBUG
       CUDA_VISIBLE_DEVICES: -1
-      TF_CPP_MIN_LOG_LEVEL: 2
+      # TF_CPP_MIN_LOG_LEVEL: 2
     volumes:
       - "models-data:/data/models"
       - "images-data:/data/images"
