@@ -53,6 +53,12 @@ services:
       - "images-data:/data/images"
     ports:
       - 9090:9090
+    deploy:
+      resources:
+        limits:
+          cpus: '0.95'
+        reservations:
+          cpus: '0.80'
 
   labelstudio:
     image: heartexlabs/label-studio
@@ -81,4 +87,3 @@ services:
         target: /label-studio/labeling_project/tasks.json
       - source: label_studio_labelling
         target: /label-studio/labeling_project/config.xml
-
