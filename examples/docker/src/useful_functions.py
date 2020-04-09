@@ -40,6 +40,8 @@ def download_image_from_url(url, output_dir, filename=None):
     return filepath
 
 num_class = 5
+# TODO cette fonction doit prendre en consideration les differents classes 
+# TODO ajouter unn attribut dans l'objet model
 def creat_compiled_model():
     model = Sequential()
     model.add(NASNetMobile(input_shape=(224, 224, 3), include_top=False,

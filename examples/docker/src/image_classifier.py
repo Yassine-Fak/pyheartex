@@ -151,9 +151,10 @@ def train_script(input_data, output_dir, image_dir, batch_size=4, num_iter=10, *
     train_datagen = ImageDataGenerator(rescale=1./255, preprocessing_function=preprocess_input)
     logger.debug(f"content of directory {os.listdir(image_dir)}")
     # train_generator = train_datagen.flow_from_directory(image_dir, batch_size=batch_size)
-    train_generator = train_datagen.flow_from_directory("/data/images", batch_size=batch_size)
+    train_generator = train_datagen.flow_from_directory("/data/images", batch_size=1)
     logger.debug("Fitting the model using the generator  ")
-    model.fit(train_generator, epochs=num_iter, steps_per_epoch=3)
+    # TODO Je vais devoir ajouter le validations et ici 
+    model.fit(train_generator, epochs=num_iter, steps_per_epoch=number_of_files)
     logger.debug("Successfully fitting the model  ")
     path = os.path.join(output_dir, "trained_model")
     logger.debug("Saving the model  ")
