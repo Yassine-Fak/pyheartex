@@ -56,3 +56,33 @@ def creat_compiled_model():
 
 model = creat_compiled_model()
 
+import tensorflow
+import tensorflow.keras.preprocessing 
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+# model = tensorflow.keras.models.Sequential([
+#     # Note the input shape is the desired size of the image 150x150 with 3 bytes color
+#     # This is the first convolution
+#     tensorflow.keras.layers.Conv2D(64, (3,3), activation='relu', input_shape=(150, 150, 3)),
+#     tensorflow.keras.layers.MaxPooling2D(2, 2),
+#     # The second convolution
+#     tensorflow.keras.layers.Conv2D(64, (3,3), activation='relu'),
+#     tensorflow.keras.layers.MaxPooling2D(2,2),
+#     # The third convolution
+#     tensorflow.keras.layers.Conv2D(128, (3,3), activation='relu'),
+#     tensorflow.keras.layers.MaxPooling2D(2,2),
+#     # The fourth convolution
+#     tensorflow.keras.layers.Conv2D(128, (3,3), activation='relu'),
+#     tensorflow.keras.layers.MaxPooling2D(2,2),
+#     # Flatten the results to feed into a DNN
+#     tensorflow.keras.layers.Flatten(),
+#     tensorflow.keras.layers.Dropout(0.5),
+#     # 512 neuron hidden layer
+#     tensorflow.keras.layers.Dense(512, activation='relu'),
+#     tensorflow.keras.layers.Dense(5, activation='softmax')
+# ])
+
+
+
+# model.compile(loss = 'categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
