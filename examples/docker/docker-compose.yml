@@ -12,7 +12,7 @@ services:
       - "redis-data:/data"
 
   worker:
-    image: gcharbon/pyheartex-example-worker
+    image: gcharbon/pyheartex-example-worker:linus
     environment:
       RQ_QUEUE_NAME: model_server
       REDIS_HOST: redis
@@ -24,7 +24,7 @@ services:
       - "images-data:/data/images"
 
   server:
-    image: gcharbon/pyheartex-example-server
+    image: gcharbon/pyheartex-example-server:linus
     environment:
       RQ_QUEUE_NAME: model_server
       REDIS_HOST: redis
@@ -38,19 +38,19 @@ services:
       - 9090:9090
 
   labelstudio:
-    image: heartexlabs/label-studio
+    image: heartexlabs/label-studio:linus
     command:
       - label-studio
       - start
       - --init
       - --template
       - image_classification
+      - --force
       - --ml-backend-url
       - http://server:9090
       - --ml-backend-name
       - fastai_classifier
       - labeling_project
-
     ports:
       # <HOST_PORT:CONTAINER_PORT>
-      - 8280:8080
+      - 9999:8080

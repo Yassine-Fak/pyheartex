@@ -1,1 +1,2 @@
-git+https://github.com/gucharbon/pyheartex.git@master#egg=pyheartex[fastai]
+git+https://github.com/gucharbon/pyheartex.git@master
+fastai
