@@ -4,6 +4,15 @@ volumes:
   redis-data:
   models-data:
   images-data:
+  labelstudio_volume:
+
+configs:
+  label_studio_config:
+    file: config/config.json
+  label_studio_tasks:
+    file: config/tasks.json
+  label_studio_labelling:
+    file: config/config.xml
 
 services:
   redis:
@@ -12,7 +21,8 @@ services:
       - "redis-data:/data"
 
   worker:
-    image: gcharbon/pyheartex-example-worker:linus
+    # image: gcharbon/pyheartex-example-worker:linus
+    image: gcharbon/pyheartex-example-worker
     environment:
       RQ_QUEUE_NAME: model_server
       REDIS_HOST: redis
@@ -24,7 +34,8 @@ services:
       - "images-data:/data/images"
 
   server:
-    image: gcharbon/pyheartex-example-server:linus
+    # image: gcharbon/pyheartex-example-server:linus
+    image: gcharbon/pyheartex-example-server
     environment:
       RQ_QUEUE_NAME: model_server
       REDIS_HOST: redis
@@ -43,14 +54,27 @@ services:
       - label-studio
       - start
       - --init
+      - new_project
       - --template
       - image_classification
-      - --force
-      - --ml-backend-url
-      - http://server:9090
-      - --ml-backend-name
-      - fastai_classifier
-      - labeling_project
+      # - label-studio
+      # - start
+      # - --init
+      # - --template
+      # - image_classification
+      # - --force
+      # - --ml-backend-url
+      # - http://server:9090
+      # - --ml-backend-name
+      # - fastai_classifier
+      # - labeling_project
     ports:
       # <HOST_PORT:CONTAINER_PORT>
       - 9999:8080
+    configs:
+      - source: label_studio_config
+        target: /label-studio/labeling_project/config.json
+      - source: label_studio_tasks
+        target: /label-studio/labeling_project/tasks.json
+      - source: label_studio_labelling
+        target: /label-studio/labeling_project/config.xml
