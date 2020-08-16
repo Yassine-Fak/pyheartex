@@ -50,13 +50,11 @@ services:
 
   labelstudio:
     image: heartexlabs/label-studio:linus
+    # image: label-studio
     command:
       - label-studio
       - start
-      - --init
-      - new_project
-      - --template
-      - image_classification
+      - labeling_project
       # - label-studio
       # - start
       # - --init
